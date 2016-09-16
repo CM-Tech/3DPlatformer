@@ -283,6 +283,7 @@ public class Draw implements Serializable{
 			transformedVec=transformedVec.subtract(camPos);
 			transformedVec.rotate("x", new Vec3(0, 0,0),camRot.x);
 			transformedVec.rotate("y", new Vec3(0, 0,0),camRot.y);
+			transformedVec.rotate("z", new Vec3(0, 0,0),camRot.z);
 			return transformedVec;
 		}
 		private int getX(float x, float z){
@@ -399,6 +400,8 @@ public class Draw implements Serializable{
 			
 		}
 		public void update(){
+			//camRot.z=(float) (Math.sin(System.currentTimeMillis()/1000.0)*45f);
+			//phyWorld.setGravity(new Vector3f((float) (-10*Math.sin(Math.toRadians(camRot.z))),(float) (-10*Math.cos(Math.toRadians(camRot.z))),0));
 			if(ticks > 0 && mul == 1){
 				ticks -= rate;
 			}
@@ -407,13 +410,14 @@ public class Draw implements Serializable{
 			ArrayList left = new ArrayList<Object3d>();
 			ArrayList right = new ArrayList<Object3d>();
 			phyWorld.stepSimulation(1f);
+			player.rB.setAngularFactor(0);
 			boolean onGround=false;
-			for(PhyObject o:objects){
-				if(o!=player && o!=objects.get(0)){
-					if(player.rB.checkCollideWith(o.rB) && o.rB.isStaticObject()){
+			for(int i=1;i<objects.size();i++){
+				if(objects.get(i)!=player && objects.get(i)!=objects.get(0)){
+					if(player.rB.checkCollideWith(objects.get(i).rB) && objects.get(i).rB.isStaticObject()){
 						Vector3f velVecTemp=new Vector3f(0,0,0);
 						player.rB.getLinearVelocity(velVecTemp);
-						System.out.println("collide");
+						//System.out.println("collide");
 						if(velVecTemp.y>-10f){
 						onGround=true;
 						}
